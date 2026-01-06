@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from sam_3d_body import load_sam_3d_body_hf, SAM3DBodyEstimator
+from sam_3d_body import load_sam_3d_body_hf, load_sam_3d_body, SAM3DBodyEstimator
 from sam_3d_body.metadata.mhr70 import pose_info as mhr70_pose_info
 from sam_3d_body.visualization.renderer import Renderer
 from sam_3d_body.visualization.skeleton_visualizer import SkeletonVisualizer
@@ -27,6 +27,8 @@ def setup_sam_3d_body(
     segmentor_path: str = "",
     fov_path: str = "",
     device: str = "cuda",
+    checkpoint_path: str = "",
+    mhr_path: str = ""
 ):
     """
     Set up SAM 3D Body estimator with optional components.
@@ -50,8 +52,13 @@ def setup_sam_3d_body(
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Load core model from HuggingFace
-    model, model_cfg = load_sam_3d_body_hf(hf_repo_id, device=device)
+    # Load core model from HuggingFace 
+    # model, model_cfg = load_sam_3d_body_hf(hf_repo_id, device=device)
+
+    if checkpoint_path:
+        model, model_cfg = load_sam_3d_body(checkpoint_path=checkpoint_path, mhr_path=mhr_path)
+    else:
+        model, model_cfg = load_sam_3d_body_hf(hf_repo_id, device=device)
 
     # Initialize optional components
     human_detector, human_segmentor, fov_estimator = None, None, None
@@ -74,7 +81,7 @@ def setup_sam_3d_body(
         print(f"Loading FOV estimator from {fov_name}...")
         from tools.build_fov_estimator import FOVEstimator
 
-        fov_estimator = FOVEstimator(name=fov_name, device=device)
+        fov_estimator = FOVEstimator(name=fov_name, device=device, path=fov_path)
 
     # Create estimator wrapper
     estimator = SAM3DBodyEstimator(

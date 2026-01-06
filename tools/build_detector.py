@@ -23,7 +23,7 @@ class HumanDetector:
             from sam3.model_builder import build_sam3_image_model
             from sam3.model.sam3_image_processor import Sam3Processor
             
-            self.detector = build_sam3_image_model()
+            self.detector = build_sam3_image_model(load_from_HF=False, checkpoint_path="checkpoints/sam3/sam3.pt")
             self.processor = Sam3Processor(self.detector)
             self.detector_func = lambda detector, img, **kwargs: self.sam3_run(
                 img, **kwargs
