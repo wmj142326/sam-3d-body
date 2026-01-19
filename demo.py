@@ -189,3 +189,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+"""
+CUDA_VISIBLE_DEVICES=3 \
+    python demo.py \
+    --image_folder ./images \
+    --output_folder ./output \
+    --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt \
+    --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt \
+    --detector_name vitdet \
+    --detector_path ./checkpoints/detectron2/ViTDet/COCO/cascade_mask_rcnn_vitdet_h/f328730692 \
+    --segmentor_name sam3 \
+    --segmentor_path ./checkpoints/sam3/sam3.pt \
+    --use_mask
+"""

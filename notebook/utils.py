@@ -19,7 +19,7 @@ LIGHT_BLUE = (0.65098039, 0.74117647, 0.85882353)
 
 
 def setup_sam_3d_body(
-    hf_repo_id: str = "facebook/sam-3d-body-vith",
+    hf_repo_id: str = "",
     detector_name: str = "vitdet",
     segmentor_name: str = "sam2",
     fov_name: str = "moge2",
@@ -46,8 +46,6 @@ def setup_sam_3d_body(
     Returns:
         estimator: SAM3DBodyEstimator instance ready for inference
     """
-    print(f"Loading SAM 3D Body model from {hf_repo_id}...")
-
     # Auto-detect device if not specified
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -56,29 +54,29 @@ def setup_sam_3d_body(
     # model, model_cfg = load_sam_3d_body_hf(hf_repo_id, device=device)
 
     if checkpoint_path:
+        print(f"Loading SAM 3D Body model from {checkpoint_path}...")
         model, model_cfg = load_sam_3d_body(checkpoint_path=checkpoint_path, mhr_path=mhr_path)
     else:
+        print(f"Loading SAM 3D Body model from {hf_repo_id}...")
         model, model_cfg = load_sam_3d_body_hf(hf_repo_id, device=device)
 
     # Initialize optional components
     human_detector, human_segmentor, fov_estimator = None, None, None
 
     if detector_name:
-        print(f"Loading human detector from {detector_name}...")
+        print(f"Loading human detector from {detector_path,detector_name}...")
         from tools.build_detector import HumanDetector
 
-        human_detector = HumanDetector(name=detector_name, device=device)
+        human_detector = HumanDetector(name=detector_name, path=detector_path, device=device)
 
     if segmentor_path:
         print(f"Loading human segmentor from {segmentor_path}...")
         from tools.build_sam import HumanSegmentor
 
-        human_segmentor = HumanSegmentor(
-            name=segmentor_name, device=device, path=segmentor_path
-        )
+        human_segmentor = HumanSegmentor(name=segmentor_name, device=device, path=segmentor_path)
 
     if fov_name:
-        print(f"Loading FOV estimator from {fov_name}...")
+        print(f"Loading FOV estimator from {fov_path, fov_name}...")
         from tools.build_fov_estimator import FOVEstimator
 
         fov_estimator = FOVEstimator(name=fov_name, device=device, path=fov_path)

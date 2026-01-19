@@ -10,6 +10,8 @@ __pycache__/
 # my files
 checkpoints/
 output/
+data/PVCP/
+tools/mhr_smpl_conversion/tmp_results/
 
 # Distribution / packaging
 .Python
