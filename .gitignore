@@ -12,7 +12,6 @@ checkpoints/
 output/
 data/PVCP/
 images/
-tools/mhr_smpl_conversion/tmp_results/
 
 # Distribution / packaging
 .Python
